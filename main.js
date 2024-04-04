@@ -1,10 +1,15 @@
 import './style.css';
 import * as XLSX from 'xlsx/xlsx.mjs';
+import html2canvas from 'html2canvas';
 
-const LOCAL_URL = 'https://backend-uspg.onrender.com/swish/generate-qr';
+const LOCAL_URL = 'http://localhost:3000/swish/generate-qr';
 
 const imageContainer = document.querySelector('#output');
 const linkContainer = document.querySelector('a');
+const numberContainer = document.querySelector('#number');
+const nameContainer = document.querySelector('#name');
+
+const links = [];
 
 const request = {
   format: 'jpg',
@@ -36,22 +41,21 @@ document.querySelector('form').addEventListener('submit', (e) => {
         raw: false,
       });
 
-      result.forEach(async (row) => {
-        console.log(row['nummer']);
+      result.forEach(async (row, index) => {
+        setTimeout(async () => {
+          const data = {
+            ...request,
+            payee: { value: row['Swishnummer'], editable: false },
+            message: { value: row['Meddelande'], editable: false },
+          };
 
-        const data = {
-          ...request,
-          payee: { value: row['nummer'], editable: false },
-          amount: { value: row['belopp'], editable: false },
-          message: { value: row['meddelande'], editable: false },
-        };
-
-        const reader = await getSwishQR(data);
+          const reader = await getSwishQR(data, row);
+        }, index * 500);
       });
     });
   };
 
-  const getSwishQR = async (data) => {
+  const getSwishQR = async (data, row) => {
     fetch(LOCAL_URL, {
       method: 'POST',
       headers: {
@@ -60,7 +64,6 @@ document.querySelector('form').addEventListener('submit', (e) => {
       body: JSON.stringify(data),
     })
       .then((response) => {
-        console.log(response);
         const reader = response.body.getReader();
         return new ReadableStream({
           start(controller) {
@@ -88,8 +91,19 @@ document.querySelector('form').addEventListener('submit', (e) => {
       // Update image
       .then((url) => {
         imageContainer.setAttribute('src', url);
-        linkContainer.href = url;
-        linkContainer.setAttribute('download', `swishQR.jpeg`);
+
+        // numberContainer.innerText = row['Swishnummer'];
+        nameContainer.innerText = row['Titel'];
+
+        html2canvas(document.querySelector('.outerDiv')).then((canvas) => {
+          console.log(canvas);
+          linkContainer.href = canvas.toDataURL('image/jpeg');
+          linkContainer.setAttribute(
+            'download',
+            `${row['Grupper']} - ${row['Titel']}.jpeg`
+          );
+          linkContainer.click();
+        });
       })
       .catch((err) => console.error(err));
   };
