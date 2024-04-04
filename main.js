@@ -1,8 +1,7 @@
 import './style.css';
 import * as XLSX from 'xlsx/xlsx.mjs';
 
-const SWISH_URL = 'https://mpc.getswish.net/qrg-swish/api/v1/prefilled';
-const LOCAL_URL = 'http://localhost:3000/swish/generate-qr';
+const LOCAL_URL = 'https://backend-uspg.onrender.com/swish/generate-qr';
 
 const imageContainer = document.querySelector('#output');
 const linkContainer = document.querySelector('a');
