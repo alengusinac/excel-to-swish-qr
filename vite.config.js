@@ -1,3 +1,5 @@
-export default {
-  base: '/excel-to-swish-qr/',
-};
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  base: '/book-landing-page/',
+});
