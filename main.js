@@ -91,7 +91,6 @@ document.querySelector('form').addEventListener('submit', (e) => {
       // Update image
       .then((url) => {
         imageContainer.setAttribute('src', url);
-
         // numberContainer.innerText = row['Swishnummer'];
         nameContainer.innerText = row['Titel'];
 
