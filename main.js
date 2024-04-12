@@ -5,7 +5,6 @@ import html2canvas from 'html2canvas';
 const LOCAL_URL = 'http://localhost:3000/swish/generate-qr';
 
 const imageContainer = document.querySelector('#output');
-const linkContainer = document.querySelector('a');
 const numberContainer = document.querySelector('#number');
 const nameContainer = document.querySelector('#name');
 
@@ -93,16 +92,15 @@ document.querySelector('form').addEventListener('submit', (e) => {
         imageContainer.setAttribute('src', url);
         // numberContainer.innerText = row['Swishnummer'];
         nameContainer.innerText = row['Titel'];
-
-        html2canvas(document.querySelector('.outerDiv')).then((canvas) => {
-          console.log(canvas);
-          linkContainer.href = canvas.toDataURL('image/jpeg');
-          linkContainer.setAttribute(
-            'download',
-            `${row['Grupper']} - ${row['Titel']}.jpeg`
-          );
-          linkContainer.click();
-        });
+        setTimeout(() => {
+          html2canvas(document.querySelector('.outerDiv')).then((canvas) => {
+            console.log(canvas);
+            const a = document.createElement('a');
+            a.href = canvas.toDataURL('image/jpeg');
+            a.download = `${row['Grupper']} - ${row['Titel']}.jpeg`;
+            a.click();
+          });
+        }, 1);
       })
       .catch((err) => console.error(err));
   };
