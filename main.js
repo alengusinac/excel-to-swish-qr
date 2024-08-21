@@ -2,7 +2,7 @@ import './style.css';
 import * as XLSX from 'xlsx/xlsx.mjs';
 import html2canvas from 'html2canvas';
 
-const LOCAL_URL = 'http://localhost:3000/swish/generate-qr';
+const FETCH_URL = 'https://backend-uspg.onrender.com/swish/generate-qr';
 
 const imageContainer = document.querySelector('#output');
 const numberContainer = document.querySelector('#number');
@@ -14,6 +14,15 @@ const request = {
   format: 'jpg',
   size: 300,
 };
+
+function truncateText(text) {
+  const maxlength = 50;
+  if (text.length <= maxlength) {
+    return text;
+  }
+
+  return text.substr(0, maxlength);
+}
 
 document.querySelector('form').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -45,7 +54,10 @@ document.querySelector('form').addEventListener('submit', (e) => {
           const data = {
             ...request,
             payee: { value: row['Swishnummer'], editable: false },
-            message: { value: row['Meddelande'], editable: false },
+            message: {
+              value: truncateText(row['Meddelande']),
+              editable: false,
+            },
           };
 
           const reader = await getSwishQR(data, row);
@@ -55,7 +67,9 @@ document.querySelector('form').addEventListener('submit', (e) => {
   };
 
   const getSwishQR = async (data, row) => {
-    fetch(LOCAL_URL, {
+    console.log('fetching...');
+
+    fetch(FETCH_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
