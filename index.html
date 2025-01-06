@@ -4,12 +4,29 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Excel to Swish QR Converter</title>
+    <title>Excel to Swish QR Generator</title>
   </head>
   <body>
-    <h1>Excel to Swish QR Converter</h1>
+    <h1>Excel to Swish QR Generator</h1>
+
+    <h4>Example Excel:</h4>
+    <img id="example-photo" src="./excel-example.png" />
+
+    <hr />
+
     <form id="form">
-      <label for="excel">Excel file</label>
+      <div>
+        <p>Editable fields:</p>
+        <input type="checkbox" id="message" />
+        <label for="message">Message</label>
+        <input type="checkbox" id="amount" />
+        <label for="amount">Amount</label>
+        <input type="checkbox" id="swishnumber" />
+        <label for="swishnumber">Swishnumber</label>
+      </div>
+
+      <hr />
+
       <input type="file" id="excelFile" accept=".xlsx" />
       <button type="submit">Convert</button>
     </form>
@@ -17,9 +34,9 @@
     <div class="outerDiv">
       <div class="innerDiv">
         <img id="output" width="250" height="250" />
-        <h2 id="number">123-228 91 63</h2>
+        <h2 id="number">1234567891</h2>
       </div>
-      <h3 id="name">Jon Doe</h3>
+      <h3 id="name">John Doe</h3>
       <img src="./Swish Logo Secondary Light-BG.png" width="150" alt="" />
     </div>
     <script type="module" src="/main.js"></script>

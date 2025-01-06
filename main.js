@@ -1,16 +1,38 @@
 import './style.css';
 import * as XLSX from 'xlsx/xlsx.mjs';
 import html2canvas from 'html2canvas';
+import JSZip from 'jszip';
 
 const FETCH_URL = 'https://backend-uspg.onrender.com/swish/generate-qr';
 
 const imageContainer = document.querySelector('#output');
 const nameContainer = document.querySelector('#name');
+const numberContainer = document.querySelector('#number');
 
-const request = {
+const messageCheck = document.querySelector('#message');
+const amountCheck = document.querySelector('#amount');
+const payeeCheck = document.querySelector('#swishnumber');
+
+let messageEditable = false;
+let amountEditable = false;
+let payeeEditable = false;
+
+messageCheck.addEventListener('change', (e) => {
+  messageEditable = e.target.checked;
+});
+amountCheck.addEventListener('change', (e) => {
+  amountEditable = e.target.checked;
+});
+payeeCheck.addEventListener('change', (e) => {
+  payeeEditable = e.target.checked;
+});
+
+const baseRequest = {
   format: 'jpg',
-  size: 300,
+  size: 1000,
 };
+
+let imageArray = []; // Array to store the generated images
 
 document.querySelector('form').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -29,14 +51,18 @@ document.querySelector('form').addEventListener('submit', async (e) => {
 
     for (const row of result) {
       const data = {
-        ...request,
-        payee: { value: row['Swishnummer'], editable: false },
-        message: { value: row['Meddelande'], editable: false },
+        ...baseRequest,
+        payee: { value: row['Swishnumber'] || '', editable: payeeEditable },
+        message: { value: row['Message'] || '', editable: messageEditable },
+        amount: { value: row['Amount'] || '', editable: amountEditable },
       };
 
       await getSwishQR(data, row);
     }
   }
+
+  // After all fetches, create and download a ZIP file
+  await downloadAsZip();
 });
 
 const readFileAsArrayBuffer = (file) => {
@@ -79,16 +105,35 @@ const getSwishQR = async (data, row) => {
 
     imageContainer.setAttribute('src', url);
     nameContainer.innerText = row['Titel'];
+    numberContainer.innerText = row['Swishnumber'] || '';
 
-    setTimeout(() => {
-      html2canvas(document.querySelector('.outerDiv')).then((canvas) => {
-        const a = document.createElement('a');
-        a.href = canvas.toDataURL('image/jpeg');
-        a.download = `${row['Titel']}.jpeg`;
-        a.click();
-      });
+    // Wait for HTML2Canvas to capture the rendered content
+    setTimeout(async () => {
+      const canvas = await html2canvas(document.querySelector('.outerDiv'));
+      const dataUrl = canvas.toDataURL('image/jpeg');
+      imageArray.push({ filename: `${row['Titel']}.jpeg`, dataUrl });
     }, 1);
   } catch (err) {
     console.error(err);
   }
+};
+
+const downloadAsZip = async () => {
+  const zip = new JSZip();
+
+  // Add each image to the ZIP file
+  imageArray.forEach(({ filename, dataUrl }) => {
+    zip.file(filename, dataUrl.split(',')[1], { base64: true });
+  });
+
+  // Generate the ZIP and trigger download
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const zipUrl = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = zipUrl;
+  a.download = 'swish_qr_images.zip';
+  a.click();
+
+  // Cleanup
+  URL.revokeObjectURL(zipUrl);
 };
