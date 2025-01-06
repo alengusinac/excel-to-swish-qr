@@ -13,6 +13,8 @@ const messageCheck = document.querySelector('#message');
 const amountCheck = document.querySelector('#amount');
 const payeeCheck = document.querySelector('#swishnumber');
 
+const input = document.querySelector('#excelFile');
+
 let messageEditable = false;
 let amountEditable = false;
 let payeeEditable = false;
@@ -36,7 +38,7 @@ let imageArray = []; // Array to store the generated images
 
 document.querySelector('form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const selectedFile = e.target.children[1].files[0];
+  const selectedFile = input.files[0];
 
   const fileData = await readFileAsArrayBuffer(selectedFile);
   const workbook = XLSX.read(fileData, {
