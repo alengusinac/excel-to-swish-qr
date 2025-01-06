@@ -54,9 +54,15 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     for (const row of result) {
       const data = {
         ...baseRequest,
-        payee: { value: row['Swishnumber'] || '', editable: payeeEditable },
-        message: { value: row['Message'] || '', editable: messageEditable },
-        amount: { value: row['Amount'] || '', editable: amountEditable },
+        ...(row['Swishnumber'] !== undefined && {
+          payee: { value: row['Swishnumber'], editable: messageEditable },
+        }),
+        ...(row['Message'] !== undefined && {
+          message: { value: row['Message'], editable: messageEditable },
+        }),
+        ...(row['Amount'] !== undefined && {
+          amount: { value: row['Amount'], editable: amountEditable },
+        }),
       };
 
       await getSwishQR(data, row);
