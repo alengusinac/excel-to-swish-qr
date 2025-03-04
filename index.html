@@ -18,6 +18,7 @@
           <b>Title</b> (Title on the card).
         </li>
         <li>Select which fields should be editable in the QR Code.</li>
+        <li>Choose your preferred colors for the card.</li>
         <li>Upload the file using the area below.</li>
         <li>Click "Convert" to generate QR codes.</li>
         <li>
@@ -33,13 +34,36 @@
 
     <form id="form">
       <div>
-        <p>Fields that should be editable:</p>
+        <h4>Fields that should be editable:</h4>
         <input type="checkbox" id="message" />
         <label for="message">Message</label>
         <input type="checkbox" id="amount" />
         <label for="amount">Amount</label>
         <input type="checkbox" id="swishnumber" />
         <label for="swishnumber">Swishnumber</label>
+      </div>
+
+      <hr />
+
+      <div class="controls">
+        <h4>Card Colors:</h4>
+        <label
+          >Color 1: <input type="color" id="color1" value="#cdd5e0"
+        /></label>
+        <label
+          >Color 2: <input type="color" id="color2" value="#1f4d8a"
+        /></label>
+        <label
+          >Angle:
+          <input
+            type="number"
+            id="angle"
+            value="45"
+            min="0"
+            max="360"
+          />°</label
+        >
+        <button type="button" id="applyGradient">Apply Gradient</button>
       </div>
 
       <hr />

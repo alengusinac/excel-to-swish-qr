@@ -36,6 +36,15 @@ const baseRequest = {
 
 let imageArray = []; // Array to store the generated images
 
+document.querySelector('#applyGradient').addEventListener('click', () => {
+  let color1 = document.getElementById('color1').value;
+  let color2 = document.getElementById('color2').value;
+  let angle = document.getElementById('angle').value;
+  let card = document.querySelector('.outerDiv');
+
+  card.style.background = `linear-gradient(${angle}deg, ${color1}, ${color2})`;
+});
+
 document.querySelector('form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const selectedFile = input.files[0];
@@ -115,26 +124,25 @@ const getSwishQR = async (data, row) => {
     nameContainer.innerText = row['Titel'];
     numberContainer.innerText = row['Swishnumber'] || '';
 
-    // Wait for HTML2Canvas to capture the rendered content
-    setTimeout(async () => {
-      const canvas = await html2canvas(document.querySelector('.outerDiv'));
-      const dataUrl = canvas.toDataURL('image/jpeg');
-      imageArray.push({ filename: `${row['Titel']}.jpeg`, dataUrl });
-    }, 1);
+    // **Ensure HTML2Canvas has enough time to capture**
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    const canvas = await html2canvas(document.querySelector('.outerDiv'));
+    const dataUrl = canvas.toDataURL('image/jpeg');
+    imageArray.push({ filename: `${row['Titel']}.jpeg`, dataUrl });
   } catch (err) {
-    console.error(err);
+    console.error('Error generating QR:', err);
   }
 };
 
 const downloadAsZip = async () => {
-  const zip = new JSZip();
+  await new Promise((resolve) => setTimeout(resolve, 500)); // **Ensure all images are added**
 
-  // Add each image to the ZIP file
+  const zip = new JSZip();
   imageArray.forEach(({ filename, dataUrl }) => {
     zip.file(filename, dataUrl.split(',')[1], { base64: true });
   });
 
-  // Generate the ZIP and trigger download
   const blob = await zip.generateAsync({ type: 'blob' });
   const zipUrl = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -142,6 +150,5 @@ const downloadAsZip = async () => {
   a.download = 'swish_qr_images.zip';
   a.click();
 
-  // Cleanup
   URL.revokeObjectURL(zipUrl);
 };
