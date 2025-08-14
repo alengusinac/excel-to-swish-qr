@@ -78,11 +78,10 @@ hr {
   margin-top: 20px;
   border: 1px solid white;
   border-radius: 10px;
-  padding: 20px 40px;
+  padding: 10px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
   h4 {
     text-align: center;
   }
@@ -98,6 +97,7 @@ hr {
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+  margin-bottom: 50px;
 }
 
 .innerDiv {
@@ -118,6 +118,10 @@ h2 {
 
 h3 {
   margin-top: 5px;
+}
+
+h4 {
+  margin: 10px 0;
 }
 
 #output {

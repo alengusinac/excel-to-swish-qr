@@ -36,14 +36,19 @@ const baseRequest = {
 
 let imageArray = []; // Array to store the generated images
 
-document.querySelector('#applyGradient').addEventListener('click', () => {
-  let color1 = document.getElementById('color1').value;
-  let color2 = document.getElementById('color2').value;
-  let angle = document.getElementById('angle').value;
+let color1 = document.getElementById('color1');
+let color2 = document.getElementById('color2');
+let angle = document.getElementById('angle');
+
+color1.addEventListener('input', applyGradient);
+color2.addEventListener('input', applyGradient);
+angle.addEventListener('input', applyGradient);
+
+function applyGradient() {
   let card = document.querySelector('.outerDiv');
 
-  card.style.background = `linear-gradient(${angle}deg, ${color1}, ${color2})`;
-});
+  card.style.background = `linear-gradient(${angle.value}deg, ${color1.value}, ${color2.value})`;
+}
 
 document.querySelector('form').addEventListener('submit', async (e) => {
   e.preventDefault();
