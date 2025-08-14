@@ -61,16 +61,30 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     });
 
     for (const row of result) {
+      // Trim and limit values to 50 characters
+      const swishnumber =
+        row['Swishnumber'] !== undefined
+          ? String(row['Swishnumber']).trim().slice(0, 50)
+          : undefined;
+      const message =
+        row['Message'] !== undefined
+          ? String(row['Message']).trim().slice(0, 50)
+          : undefined;
+      const amount =
+        row['Amount'] !== undefined
+          ? String(row['Amount']).trim().slice(0, 50)
+          : undefined;
+
       const data = {
         ...baseRequest,
-        ...(row['Swishnumber'] !== undefined && {
-          payee: { value: row['Swishnumber'], editable: messageEditable },
+        ...(swishnumber !== undefined && {
+          payee: { value: swishnumber, editable: messageEditable },
         }),
-        ...(row['Message'] !== undefined && {
-          message: { value: row['Message'], editable: messageEditable },
+        ...(message !== undefined && {
+          message: { value: message, editable: messageEditable },
         }),
-        ...(row['Amount'] !== undefined && {
-          amount: { value: row['Amount'], editable: amountEditable },
+        ...(amount !== undefined && {
+          amount: { value: amount, editable: amountEditable },
         }),
       };
 
@@ -129,7 +143,9 @@ const getSwishQR = async (data, row) => {
 
     const canvas = await html2canvas(document.querySelector('.outerDiv'));
     const dataUrl = canvas.toDataURL('image/jpeg');
-    imageArray.push({ filename: `${row['Titel']}.jpeg`, dataUrl });
+    // Replace '/' with '-' in filename to avoid folder creation in ZIP
+    const safeFilename = `${row['Titel']}`.replaceAll('/', '-') + '.jpeg';
+    imageArray.push({ filename: safeFilename, dataUrl });
   } catch (err) {
     console.error('Error generating QR:', err);
   }
