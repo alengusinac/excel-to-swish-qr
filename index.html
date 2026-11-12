@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -28,126 +28,156 @@
     </div>
 
     <h4>Example Excel:</h4>
-    <img id="example-photo" src="./excel-example.png" alt="Example Excel sheet with Title, Message, Amount and Swishnumber columns" />
+    <img
+      id="example-photo"
+      src="./excel-example.png"
+      alt="Example Excel sheet with Title, Message, Amount and Swishnumber columns"
+    />
 
     <hr />
 
-    <form id="form">
-      <div>
-        <h4>Fields that should be editable:</h4>
-        <input type="checkbox" id="message" />
-        <label for="message">Message</label>
-        <input type="checkbox" id="amount" />
-        <label for="amount">Amount</label>
-        <input type="checkbox" id="swishnumber" />
-        <label for="swishnumber">Swishnumber</label>
-      </div>
+    <div class="workspace">
+      <form id="form">
+        <div>
+          <h4>Fields that should be editable:</h4>
+          <input type="checkbox" id="message" />
+          <label for="message">Message</label>
+          <input type="checkbox" id="amount" />
+          <label for="amount">Amount</label>
+          <input type="checkbox" id="swishnumber" />
+          <label for="swishnumber">Swishnumber</label>
+        </div>
 
-      <hr />
+        <hr />
 
-      <div class="controls">
-        <h4>Colors:</h4>
-        <div class="control-grid">
-          <span class="control-label" id="bgTypeLabel">Background</span>
-          <div class="segmented" role="radiogroup" aria-labelledby="bgTypeLabel">
-            <label>
-              <input type="radio" name="bgType" value="solid" />
-              <span>Solid</span>
-            </label>
-            <label>
-              <input type="radio" name="bgType" value="linear" checked />
-              <span>Linear gradient</span>
-            </label>
-            <label>
-              <input type="radio" name="bgType" value="radial" />
-              <span>Radial gradient</span>
-            </label>
-          </div>
+        <div class="controls">
+          <h4>Colors:</h4>
+          <div class="control-grid">
+            <span class="control-label" id="bgTypeLabel">Background</span>
+            <div
+              class="segmented"
+              role="radiogroup"
+              aria-labelledby="bgTypeLabel"
+            >
+              <label>
+                <input type="radio" name="bgType" value="solid" />
+                <span>Solid</span>
+              </label>
+              <label>
+                <input type="radio" name="bgType" value="linear" checked />
+                <span>Linear gradient</span>
+              </label>
+              <label>
+                <input type="radio" name="bgType" value="radial" />
+                <span>Radial gradient</span>
+              </label>
+            </div>
 
-          <span class="control-label" id="bgColorsLabel">Colors</span>
-          <div class="control-fields" role="group" aria-labelledby="bgColorsLabel">
-            <label class="swatch">
-              <input type="color" id="color1" value="#cdd5e0" />
-              <span id="color1Label">Start</span>
-            </label>
-            <label class="swatch" id="color2Field">
-              <input type="color" id="color2" value="#1f4d8a" />
-              <span>End</span>
-            </label>
-          </div>
+            <span class="control-label" id="bgColorsLabel">Colors</span>
+            <div
+              class="control-fields"
+              role="group"
+              aria-labelledby="bgColorsLabel"
+            >
+              <label class="swatch">
+                <input type="color" id="color1" value="#cdd5e0" />
+                <span id="color1Label">Start</span>
+              </label>
+              <label class="swatch" id="color2Field">
+                <input type="color" id="color2" value="#1f4d8a" />
+                <span>End</span>
+              </label>
+            </div>
 
-          <label class="control-label" for="angle" id="angleLabel">Angle</label>
-          <div class="control-fields" id="angleField">
-            <input type="range" id="angleRange" min="0" max="360" value="45" aria-label="Angle" />
-            <span class="number-unit">
-              <input type="number" id="angle" min="0" max="360" value="45" />°
-            </span>
-          </div>
+            <label class="control-label" for="angle" id="angleLabel"
+              >Angle</label
+            >
+            <div class="control-fields" id="angleField">
+              <input
+                type="range"
+                id="angleRange"
+                min="0"
+                max="360"
+                value="45"
+                aria-label="Angle"
+              />
+              <span class="number-unit">
+                <input type="number" id="angle" min="0" max="360" value="45" />°
+              </span>
+            </div>
 
-          <span class="control-label">Title</span>
-          <div class="control-fields">
-            <label class="swatch">
-              <input type="color" id="titleColor" value="#000000" />
-              <span>Text color</span>
-            </label>
+            <span class="control-label">Title</span>
+            <div class="control-fields">
+              <label class="swatch">
+                <input type="color" id="titleColor" value="#000000" />
+                <span>Text color</span>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
 
-      <hr />
+        <hr />
 
-      <h4>Excel file:</h4>
-      <label class="dropzone" id="dropzone" for="excelFile">
-        <input
-          type="file"
-          id="excelFile"
-          class="visually-hidden"
-          accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        />
-        <svg
-          class="dropzone-icon"
-          viewBox="0 0 24 24"
-          width="40"
-          height="40"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
-          <path d="M14 3v5h5" />
-          <path d="M12 18v-6" />
-          <path d="m9 15 3-3 3 3" />
-        </svg>
-        <span class="dropzone-empty">
-          <strong>Drag &amp; drop your Excel file here</strong>
-          <span>or <u>click to browse</u> (.xlsx)</span>
-        </span>
-        <span class="dropzone-selected">
-          <strong id="fileName"></strong>
-          <span id="fileSize"></span>
-          <span class="dropzone-hint">Click or drop another file to replace it</span>
-        </span>
-      </label>
-      <button type="submit">Convert</button>
-      <p id="status" role="status" aria-live="polite"></p>
-    </form>
+        <h4>Excel file:</h4>
+        <label class="dropzone" id="dropzone" for="excelFile">
+          <input
+            type="file"
+            id="excelFile"
+            class="visually-hidden"
+            accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          />
+          <svg
+            class="dropzone-icon"
+            viewBox="0 0 24 24"
+            width="40"
+            height="40"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"
+            />
+            <path d="M14 3v5h5" />
+            <path d="M12 18v-6" />
+            <path d="m9 15 3-3 3 3" />
+          </svg>
+          <span class="dropzone-empty">
+            <strong>Drag &amp; drop your Excel file here</strong>
+            <span>or <u>click to browse</u> (.xlsx)</span>
+          </span>
+          <span class="dropzone-selected">
+            <strong id="fileName"></strong>
+            <span id="fileSize"></span>
+            <span class="dropzone-hint"
+              >Click or drop another file to replace it</span
+            >
+          </span>
+        </label>
+        <button type="submit">Convert</button>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
 
-    <div class="outerDiv">
-      <div class="innerDiv">
-        <img
-          id="output"
-          src="./qr-placeholder.svg"
-          width="250"
-          height="250"
-          alt="Swish QR code"
-        />
-        <h2 id="number">1234567891</h2>
-      </div>
-      <h3 id="name">John Doe</h3>
-      <img src="./Swish Logo Secondary Light-BG.png" width="150" alt="" />
+      <section class="preview" aria-labelledby="previewHeading">
+        <h4 id="previewHeading">Preview</h4>
+        <div class="outerDiv">
+          <div class="innerDiv">
+            <img
+              id="output"
+              src="./qr-placeholder.svg"
+              width="250"
+              height="250"
+              alt="Swish QR code"
+            />
+            <h2 id="number">1234567891</h2>
+          </div>
+          <h3 id="name">John Doe</h3>
+          <img src="./Swish Logo Secondary Light-BG.png" width="150" alt="" />
+        </div>
+      </section>
     </div>
     <script type="module" src="/main.js"></script>
   </body>
