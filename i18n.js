@@ -114,6 +114,8 @@ export const translations = {
   },
 };
 
+// Swedish is the primary language; English is available from the switch
+export const DEFAULT_LANGUAGE = 'sv';
 const STORAGE_KEY = 'language';
 const listeners = [];
 
@@ -122,10 +124,9 @@ function initialLanguage() {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved && translations[saved]) return saved;
   } catch {
-    // Storage can be blocked (private mode etc.); fall back to the browser
+    // Storage can be blocked (private mode etc.); use the default
   }
-  const preferred = navigator.languages ?? [navigator.language];
-  return /^sv\b/i.test(preferred[0] ?? '') ? 'sv' : 'en';
+  return DEFAULT_LANGUAGE;
 }
 
 let currentLanguage = initialLanguage();
@@ -133,7 +134,8 @@ let currentLanguage = initialLanguage();
 export const getLanguage = () => currentLanguage;
 
 export function t(key, vars = {}) {
-  const text = translations[currentLanguage][key] ?? translations.en[key] ?? key;
+  const text =
+    translations[currentLanguage][key] ?? translations[DEFAULT_LANGUAGE][key] ?? key;
   return text.replace(/\{(\w+)\}/g, (_, name) => String(vars[name] ?? ''));
 }
 

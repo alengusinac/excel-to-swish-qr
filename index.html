@@ -1,56 +1,59 @@
 <!doctype html>
-<html lang="en">
+<html lang="sv">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/swish_logo_transparent.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Excel to Swish QR Generator</title>
+    <title>Excel till Swish QR-generator</title>
   </head>
   <body>
+    <h1 data-i18n="heading">Excel till Swish QR-generator</h1>
+
     <div
       class="segmented lang-toggle"
       role="radiogroup"
-      aria-label="Language / Språk"
+      aria-label="Språk / Language"
     >
+      <label>
+        <input type="radio" name="language" value="sv" checked />
+        <span lang="sv">Svenska</span>
+      </label>
       <label>
         <input type="radio" name="language" value="en" />
         <span lang="en">English</span>
       </label>
-      <label>
-        <input type="radio" name="language" value="sv" />
-        <span lang="sv">Svenska</span>
-      </label>
     </div>
 
-    <h1 data-i18n="heading">Excel to Swish QR Generator</h1>
-
     <div class="instructions">
-      <h2 data-i18n="howToHeading">How to Generate Swish QR Codes</h2>
+      <h2 data-i18n="howToHeading">Så skapar du Swish QR-koder</h2>
       <ol>
         <li data-i18n="step1">
-          Prepare an Excel file with at least one of the following columns:
-          <b>Swishnumber</b>, <b>Message</b>, <b>Amount</b>, and
-          <b>Title</b> (the title on the card).
+          Förbered en Excel-fil med minst en av följande kolumner:
+          <b>Swishnummer</b>, <b>Meddelande</b>, <b>Belopp</b> och
+          <b>Titel</b> (titeln på kortet). Engelska kolumnnamn (Swishnumber,
+          Message, Amount, Title) fungerar också.
         </li>
         <li data-i18n="step2">
-          Select which fields should be editable in the QR Code.
+          Välj vilka fält som ska gå att ändra i QR-koden.
         </li>
-        <li data-i18n="step3">Choose your preferred colors for the card.</li>
-        <li data-i18n="step4">Upload the file using the area below.</li>
-        <li data-i18n="step5">Click "Convert" to generate QR codes.</li>
+        <li data-i18n="step3">Välj färger för kortet.</li>
+        <li data-i18n="step4">Ladda upp filen i fältet nedan.</li>
+        <li data-i18n="step5">
+          Klicka på ”Konvertera” för att skapa QR-koderna.
+        </li>
         <li data-i18n="step6">
-          Download will automatically start when all QR codes are generated.
+          Nedladdningen startar automatiskt när alla QR-koder är klara.
         </li>
       </ol>
     </div>
 
-    <h4 data-i18n="exampleHeading">Example Excel:</h4>
+    <h4 data-i18n="exampleHeading">Exempel på Excel-fil:</h4>
     <img
       id="example-photo"
-      src="./excel-example.png"
+      src="./excel-example-sv.png"
       data-i18n-src="exampleImage"
       data-i18n-alt="exampleAlt"
-      alt="Example Excel sheet with Title, Message, Amount and Swishnumber columns"
+      alt="Exempel på Excel-ark med kolumnerna Titel, Meddelande, Belopp och Swishnummer"
     />
 
     <hr />
@@ -58,24 +61,24 @@
     <div class="workspace">
       <form id="form">
         <div>
-          <h4 data-i18n="editableHeading">Fields that should be editable:</h4>
+          <h4 data-i18n="editableHeading">Fält som ska gå att ändra:</h4>
           <input type="checkbox" id="message" />
-          <label for="message" data-i18n="fieldMessage">Message</label>
+          <label for="message" data-i18n="fieldMessage">Meddelande</label>
           <input type="checkbox" id="amount" />
-          <label for="amount" data-i18n="fieldAmount">Amount</label>
+          <label for="amount" data-i18n="fieldAmount">Belopp</label>
           <input type="checkbox" id="swishnumber" />
           <label for="swishnumber" data-i18n="fieldSwishnumber"
-            >Swishnumber</label
+            >Swishnummer</label
           >
         </div>
 
         <hr />
 
         <div class="controls">
-          <h4 data-i18n="colorsHeading">Colors:</h4>
+          <h4 data-i18n="colorsHeading">Färger:</h4>
           <div class="control-grid">
             <span class="control-label" id="bgTypeLabel" data-i18n="background"
-              >Background</span
+              >Bakgrund</span
             >
             <div
               class="segmented"
@@ -84,20 +87,20 @@
             >
               <label>
                 <input type="radio" name="bgType" value="solid" />
-                <span data-i18n="solid">Solid</span>
+                <span data-i18n="solid">Enfärgad</span>
               </label>
               <label>
                 <input type="radio" name="bgType" value="linear" checked />
-                <span data-i18n="linearGradient">Linear gradient</span>
+                <span data-i18n="linearGradient">Linjär toning</span>
               </label>
               <label>
                 <input type="radio" name="bgType" value="radial" />
-                <span data-i18n="radialGradient">Radial gradient</span>
+                <span data-i18n="radialGradient">Radiell toning</span>
               </label>
             </div>
 
             <span class="control-label" id="bgColorsLabel" data-i18n="colors"
-              >Colors</span
+              >Färger</span
             >
             <div
               class="control-fields"
@@ -110,7 +113,7 @@
               </label>
               <label class="swatch" id="color2Field">
                 <input type="color" id="color2" value="#1f4d8a" />
-                <span data-i18n="colorEnd">End</span>
+                <span data-i18n="colorEnd">Slut</span>
               </label>
             </div>
 
@@ -119,7 +122,7 @@
               for="angle"
               id="angleLabel"
               data-i18n="angle"
-              >Angle</label
+              >Vinkel</label
             >
             <div class="control-fields" id="angleField">
               <input
@@ -128,7 +131,7 @@
                 min="0"
                 max="360"
                 value="45"
-                aria-label="Angle"
+                aria-label="Vinkel"
                 data-i18n-aria-label="angle"
               />
               <span class="number-unit">
@@ -136,11 +139,11 @@
               </span>
             </div>
 
-            <span class="control-label" data-i18n="title">Title</span>
+            <span class="control-label" data-i18n="title">Titel</span>
             <div class="control-fields">
               <label class="swatch">
                 <input type="color" id="titleColor" value="#000000" />
-                <span data-i18n="textColor">Text color</span>
+                <span data-i18n="textColor">Textfärg</span>
               </label>
             </div>
           </div>
@@ -148,7 +151,7 @@
 
         <hr />
 
-        <h4 data-i18n="fileHeading">Excel file:</h4>
+        <h4 data-i18n="fileHeading">Excel-fil:</h4>
         <label class="dropzone" id="dropzone" for="excelFile">
           <input
             type="file"
@@ -177,26 +180,26 @@
           </svg>
           <span class="dropzone-empty">
             <strong data-i18n="dropTitle"
-              >Drag &amp; drop your Excel file here</strong
+              >Dra och släpp din Excel-fil här</strong
             >
             <span data-i18n="dropBrowse"
-              >or <u>click to browse</u> (.xlsx)</span
+              >eller <u>klicka för att välja</u> (.xlsx)</span
             >
           </span>
           <span class="dropzone-selected">
             <strong id="fileName"></strong>
             <span id="fileSize"></span>
             <span class="dropzone-hint" data-i18n="dropReplace"
-              >Click or drop another file to replace it</span
+              >Klicka eller släpp en annan fil för att byta</span
             >
           </span>
         </label>
-        <button type="submit" data-i18n="convert">Convert</button>
+        <button type="submit" data-i18n="convert">Konvertera</button>
         <p id="status" role="status" aria-live="polite"></p>
       </form>
 
       <section class="preview" aria-labelledby="previewHeading">
-        <h4 id="previewHeading" data-i18n="previewHeading">Preview</h4>
+        <h4 id="previewHeading" data-i18n="previewHeading">Förhandsvisning</h4>
         <div class="outerDiv">
           <div class="innerDiv">
             <img
@@ -204,12 +207,12 @@
               src="./qr-placeholder.svg"
               width="250"
               height="250"
-              alt="Swish QR code"
+              alt="Swish QR-kod"
               data-i18n-alt="qrAlt"
             />
             <h2 id="number">1234567891</h2>
           </div>
-          <h3 id="name" data-i18n="placeholderName">John Doe</h3>
+          <h3 id="name" data-i18n="placeholderName">Anna Andersson</h3>
           <img src="./Swish Logo Secondary Light-BG.png" width="150" alt="" />
         </div>
       </section>
