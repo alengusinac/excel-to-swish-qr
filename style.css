@@ -150,3 +150,214 @@ h4 {
     background-color: #f9f9f9;
   }
 }
+
+button:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+#status {
+  min-height: 1.5em;
+  margin: 10px 0 0;
+  text-align: center;
+}
+
+#status.error {
+  color: #e5484d;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.dropzone {
+  box-sizing: border-box;
+  width: min(420px, 100%);
+  margin-bottom: 16px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  border: 2px dashed rgba(128, 128, 128, 0.6);
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.dropzone:hover,
+.dropzone:focus-within,
+.dropzone.dragover {
+  border-color: #646cff;
+  background-color: rgba(100, 108, 255, 0.08);
+}
+
+.dropzone.dragover {
+  border-style: solid;
+}
+
+.dropzone:focus-within {
+  outline: 2px solid #646cff;
+  outline-offset: 2px;
+}
+
+.dropzone.invalid {
+  border-color: #e5484d;
+  background-color: rgba(229, 72, 77, 0.08);
+}
+
+.dropzone-icon {
+  opacity: 0.7;
+}
+
+.dropzone.has-file .dropzone-icon {
+  color: #2e9e5b;
+  opacity: 1;
+}
+
+.dropzone-empty,
+.dropzone-selected {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropzone-selected,
+.dropzone.has-file .dropzone-empty {
+  display: none;
+}
+
+.dropzone.has-file .dropzone-selected {
+  display: flex;
+}
+
+#fileName {
+  overflow-wrap: anywhere;
+}
+
+#fileSize,
+.dropzone-hint {
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+
+.controls h4 {
+  text-align: center;
+}
+
+.control-grid {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center;
+  gap: 12px 16px;
+}
+
+.control-label {
+  justify-self: end;
+  font-weight: 600;
+}
+
+.control-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.control-grid [hidden] {
+  display: none;
+}
+
+.swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.swatch input[type='color'] {
+  width: 36px;
+  height: 28px;
+  padding: 2px;
+  border: 1px solid rgba(128, 128, 128, 0.5);
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+#angleRange {
+  width: 140px;
+}
+
+.number-unit input {
+  width: 3.5em;
+}
+
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid rgba(128, 128, 128, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.segmented label {
+  position: relative;
+  cursor: pointer;
+}
+
+.segmented label + label {
+  border-left: 1px solid rgba(128, 128, 128, 0.5);
+}
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.segmented span {
+  display: block;
+  padding: 4px 12px;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.segmented label:hover span {
+  background-color: rgba(100, 108, 255, 0.1);
+}
+
+.segmented input:checked + span {
+  background-color: #646cff;
+  color: #fff;
+}
+
+.segmented input:focus-visible + span {
+  outline: 2px solid #646cff;
+  outline-offset: -4px;
+}
+
+@media (max-width: 480px) {
+  .control-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .control-label {
+    justify-self: start;
+    margin-top: 8px;
+  }
+}
