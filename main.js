@@ -2,6 +2,13 @@ import './style.css';
 import * as XLSX from 'xlsx/xlsx.mjs';
 import html2canvas from 'html2canvas';
 import JSZip from 'jszip';
+import {
+  applyTranslations,
+  getLanguage,
+  onLanguageChange,
+  setLanguage,
+  tText,
+} from './i18n.js';
 
 const FETCH_URL = 'https://backend-uspg.onrender.com/swish/generate-qr';
 const MAX_FIELD_LENGTH = 50;
@@ -44,7 +51,9 @@ function applyBackground() {
   const type = backgroundType();
   const isGradient = type !== 'solid';
 
-  color1Label.textContent = isGradient ? (type === 'radial' ? 'Center' : 'Start') : 'Color';
+  color1Label.textContent = tText(
+    isGradient ? (type === 'radial' ? 'colorCenter' : 'colorStart') : 'colorSingle'
+  );
   color2Field.hidden = !isGradient;
   angleLabel.hidden = angleField.hidden = type !== 'linear';
 
@@ -71,17 +80,37 @@ angle.addEventListener('input', () => {
 color1.addEventListener('input', applyBackground);
 color2.addEventListener('input', applyBackground);
 bgTypeInputs.forEach((radio) => radio.addEventListener('change', applyBackground));
-applyBackground();
 
 const titleColor = document.getElementById('titleColor');
 titleColor.addEventListener('input', () => {
   nameContainer.style.color = titleColor.value;
 });
 
-function setStatus(text, isError = false) {
-  statusContainer.textContent = text;
+// The status is stored as a function so it can be re-rendered in the new
+// language when the user switches language.
+let renderStatus = () => '';
+
+function setStatus(render, isError = false) {
+  renderStatus = typeof render === 'function' ? render : () => render;
+  statusContainer.textContent = renderStatus();
   statusContainer.classList.toggle('error', isError);
 }
+
+// --- Language ----------------------------------------------------------
+
+const languageInputs = document.querySelectorAll('input[name="language"]');
+languageInputs.forEach((radio) => {
+  radio.checked = radio.value === getLanguage();
+  radio.addEventListener('change', () => setLanguage(radio.value));
+});
+
+onLanguageChange(() => {
+  applyBackground();
+  statusContainer.textContent = renderStatus();
+});
+
+applyTranslations();
+applyBackground();
 
 // --- File picker / drag-and-drop ---------------------------------------
 
@@ -107,7 +136,7 @@ function showSelectedFile() {
 
 function rejectFile(file) {
   dropzone.classList.add('invalid');
-  setStatus(`"${file.name}" is not an Excel (.xlsx) file.`, true);
+  setStatus(() => tText('notExcel', { name: file.name }), true);
 }
 
 input.addEventListener('change', () => {
@@ -171,7 +200,7 @@ form.addEventListener('submit', async (e) => {
   const selectedFile = input.files[0];
   if (!selectedFile) {
     dropzone.classList.add('invalid');
-    setStatus('Please choose an Excel file first.', true);
+    setStatus(() => tText('noFile'), true);
     return;
   }
 
@@ -180,7 +209,7 @@ form.addEventListener('submit', async (e) => {
     await convert(selectedFile);
   } catch (err) {
     console.error(err);
-    setStatus(`Something went wrong: ${err.message}`, true);
+    setStatus(() => tText('error', { message: err.message }), true);
   } finally {
     submitButton.disabled = false;
   }
@@ -201,7 +230,7 @@ async function convert(file) {
   }
 
   if (rows.length === 0) {
-    setStatus('The file contains no rows.', true);
+    setStatus(() => tText('noRows'), true);
     return;
   }
 
@@ -210,20 +239,22 @@ async function convert(file) {
   const usedNames = new Map();
 
   for (const [i, { text, raw }] of rows.entries()) {
-    // "Titel" is still accepted for older sheets
-    const title = clean(text['Title'] ?? text['Titel']) ?? '';
-    const label = title || `row ${i + 1}`;
+    const title = clean(column(text, 'title')) ?? '';
+    const rowNumber = i + 1;
+    const label = title || tText('rowLabel', { n: rowNumber });
     setStatus(
-      `Generating ${i + 1} of ${rows.length}…` +
-        (i === 0 ? ' (the first one can take a while if the server is waking up)' : '')
+      () =>
+        tText('generating', { n: rowNumber, total: rows.length }) +
+        (rowNumber === 1 ? tText('firstSlow') : '')
     );
 
-    const swishnumber = clean(text['Swishnumber']);
-    const message = clean(text['Message']);
+    const swishnumber = clean(column(text, 'swishnumber'));
+    const message = clean(column(text, 'message'));
+    const rawAmount = column(raw, 'amount');
     const amount =
-      typeof raw['Amount'] === 'number'
-        ? String(raw['Amount'])
-        : clean(text['Amount']);
+      typeof rawAmount === 'number'
+        ? String(rawAmount)
+        : clean(column(text, 'amount'));
 
     const data = {
       ...baseRequest,
@@ -240,7 +271,10 @@ async function convert(file) {
 
     try {
       const dataUrl = await renderCard(data, title, swishnumber ?? '');
-      images.push({ filename: uniqueFilename(title || `row-${i + 1}`, usedNames), dataUrl });
+      images.push({
+        filename: uniqueFilename(title || tText('rowFile', { n: rowNumber }), usedNames),
+        dataUrl,
+      });
     } catch (err) {
       console.error(`Error generating QR for ${label}:`, err);
       failed.push(label);
@@ -248,7 +282,7 @@ async function convert(file) {
   }
 
   if (images.length === 0) {
-    setStatus(`No QR codes could be generated. Failed: ${failed.join(', ')}`, true);
+    setStatus(() => tText('noneGenerated', { failed: failed.join(', ') }), true);
     return;
   }
 
@@ -256,12 +290,32 @@ async function convert(file) {
 
   if (failed.length > 0) {
     setStatus(
-      `Downloaded ${images.length} of ${rows.length} QR codes. Failed: ${failed.join(', ')}`,
+      () =>
+        tText('partial', {
+          done: images.length,
+          total: rows.length,
+          failed: failed.join(', '),
+        }),
       true
     );
   } else {
-    setStatus(`Done! Downloaded ${images.length} QR codes.`);
+    setStatus(() => tText('done', { count: images.length }));
   }
+}
+
+// Accepted column names (English names first, Swedish alternatives after)
+const COLUMNS = {
+  title: ['Title', 'Titel'],
+  message: ['Message', 'Meddelande'],
+  amount: ['Amount', 'Belopp'],
+  swishnumber: ['Swishnumber', 'Swishnummer'],
+};
+
+function column(row, field) {
+  for (const name of COLUMNS[field]) {
+    if (row[name] !== undefined) return row[name];
+  }
+  return undefined;
 }
 
 function clean(value) {
@@ -292,6 +346,8 @@ async function renderCard(data, title, swishnumber) {
   const url = URL.createObjectURL(blob);
   try {
     imageContainer.src = url;
+    // The card now shows real data, so stop translating the placeholder name
+    nameContainer.removeAttribute('data-i18n');
     nameContainer.innerText = title;
     numberContainer.innerText = swishnumber;
 
